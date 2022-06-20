@@ -1,6 +1,7 @@
 package com.example.demo.resources;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.example.demo.domain.Usuario;
 import com.example.demo.services.UsuarioService;
 
+
+
 @RestController
 @RequestMapping(value = "/usuarios")
 public class UsuarioResource {
@@ -22,7 +25,7 @@ public class UsuarioResource {
 	private UsuarioService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Usuario> buscar(@PathVariable Integer id) {
+	public ResponseEntity<Usuario> find(@PathVariable Integer id) {
 		Usuario obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -47,4 +50,11 @@ public class UsuarioResource {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<List<Usuario>> findAll() {
+		List<Usuario> list = service.findAll();
+		return ResponseEntity.ok().body(list);
+	}
+	
 }

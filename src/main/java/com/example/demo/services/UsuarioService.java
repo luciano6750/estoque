@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,9 @@ public class UsuarioService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir um usúario que participou de alguma votação");
 		}
+	}
+	
+	public List<Usuario> findAll(){
+		return repo.findAll();
 	}
 }
