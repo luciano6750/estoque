@@ -17,36 +17,35 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.demo.domain.Cargo;
-import com.example.demo.domain.Cargo;
-import com.example.demo.dto.CargoDTO;
-import com.example.demo.dto.CargoNewDTO;
-import com.example.demo.dto.CargoDTO;
-import com.example.demo.services.CargoService;
+import com.example.demo.domain.Candidato;
+import com.example.demo.dto.CandidatoDTO;
+import com.example.demo.services.CandidatoService;
+
+
 
 @RestController
-@RequestMapping(value = "/cargos")
-public class CargoResource {
+@RequestMapping(value = "/candidatos")
+public class CandidatoResource {
 
 	@Autowired
-	private CargoService service;
+	private CandidatoService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Cargo> find(@PathVariable Integer id) {
-		Cargo obj = service.find(id);
+	public ResponseEntity<Candidato> find(@PathVariable Integer id) {
+		Candidato obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody CargoNewDTO objDTO) {
-		Cargo obj = service.fromDTO(objDTO); 
+	public ResponseEntity<Void> insert(@Valid @RequestBody CandidatoDTO objDTO) {
+		Candidato obj = service.fromDTO(objDTO); 
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid @RequestBody Cargo obj, @PathVariable Integer id){
+	public ResponseEntity<Void> update(@Valid @RequestBody Candidato obj, @PathVariable Integer id){
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
@@ -59,21 +58,21 @@ public class CargoResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<CargoDTO>> findAll() {
-		List<Cargo> list = service.findAll();
-		List<CargoDTO> listDTO = list.stream().map(obj -> new CargoDTO(obj)).collect(Collectors.toList()); 
+	public ResponseEntity<List<CandidatoDTO>> findAll() {
+		List<Candidato> list = service.findAll();
+		List<CandidatoDTO> listDTO = list.stream().map(obj -> new CandidatoDTO(obj)).collect(Collectors.toList()); 
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
-	public ResponseEntity<Page<CargoDTO>> findPage(
+	public ResponseEntity<Page<CandidatoDTO>> findPage(
 			@RequestParam(value = "page", defaultValue = "0") Integer page, 
 			@RequestParam(value = "linesPerPage", defaultValue = "2") Integer linesPerPage, 
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy, 
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-		Page<Cargo> list = service.findPage(page, linesPerPage, orderBy, direction);
-		Page<CargoDTO> listDTO = list.map(obj -> new CargoDTO(obj)); 
+		Page<Candidato> list = service.findPage(page, linesPerPage, orderBy, direction);
+		Page<CandidatoDTO> listDTO = list.map(obj -> new CandidatoDTO(obj)); 
 		return ResponseEntity.ok().body(listDTO);
 	}
-	
+
 }

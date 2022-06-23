@@ -1,41 +1,50 @@
-package com.example.demo.domain;
+package com.example.demo.dto;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-
-import javax.persistence.Entity;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
+
+import com.example.demo.domain.Usuario;
 import com.example.demo.domain.enums.TipoUsuario;
+import com.example.demo.services.validation.UsuarioInsert;
 
-
-@Entity
-public class Usuario implements Serializable {
+@UsuarioInsert
+public class UsuarioDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@NotEmpty(message = "Preenchimento obrigatório")
+	@Length(min = 5, max = 80 ,message = "O tamanho deve ser entre 5 e 80 caracteres")
 	private String nome;
+	@NotEmpty(message = "Preenchimento obrigatório")
+	@Length(min = 11, max = 11 ,message = "O tamanho do cpf deve ser de 11 caracteres")
+	@CPF
+	@Column(unique = true)
 	private String usuarioCPF;
 	private String senha;
 	private TipoUsuario tipo;
-
-	public Usuario() {
+	
+	public UsuarioDTO() {
+		
 	}
 
-	public Usuario(Integer id, String nome, String usuarioCPF, String senha, TipoUsuario tipo) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.usuarioCPF = usuarioCPF;
-		this.senha = senha;
-		this.tipo = (tipo == null) ? null : tipo;
+	public UsuarioDTO(Usuario obj) {
+		id = obj.getId();
+		nome = obj.getNome();
+		usuarioCPF = obj.getusuarioCPF();
+		senha = obj.getSenha();
+		tipo = obj.getTipo();
 	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -75,22 +84,7 @@ public class Usuario implements Serializable {
 	public void setTipo(TipoUsuario tipo) {
 		this.tipo = tipo;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		return Objects.equals(id, other.id);
-	}
-
+	
+	
+	
 }

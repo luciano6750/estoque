@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -21,10 +22,13 @@ public class Eleicao implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String nome;
 	@JsonFormat(pattern = "dd/MM/yyyy")
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private Date dataInicio;
 	@JsonFormat(pattern = "dd/MM/yyyy")
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private Date dataFim;
 
 	@OneToMany(mappedBy = "eleicao")

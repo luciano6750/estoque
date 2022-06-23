@@ -10,35 +10,34 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.domain.Candidato;
 import com.example.demo.domain.Cargo;
-import com.example.demo.domain.Eleicao;
-import com.example.demo.dto.CargoDTO;
-import com.example.demo.dto.CargoNewDTO;
+import com.example.demo.dto.CandidatoDTO;
+import com.example.demo.repositories.CandidatoRepository;
 import com.example.demo.repositories.CargoRepository;
-import com.example.demo.repositories.EleicaoRepository;
 import com.example.demo.services.exception.DataIntegrityException;
 import com.example.demo.services.exception.ObjectNotFoundException;
 
 @Service
-public class CargoService {
+public class CandidatoService {
 
 	@Autowired
-	private CargoRepository repo;
+	private CandidatoRepository repo;
 	@Autowired
-	private EleicaoRepository eleicaoRepository;
+	private CargoRepository cargoRepository;
 
-	public Cargo find(Integer id) {
-		Optional<Cargo> obj = repo.findById(id);
+	public Candidato find(Integer id) {
+		Optional<Candidato> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				"Cargos nao encontrados! Id: " + id + ", Tipo: " + Cargo.class.getName()));
+				"Candidatos nao encontrados! Id: " + id + ", Tipo: " + Candidato.class.getName()));
 	}
 
-	public Cargo insert(Cargo obj) {
+	public Candidato insert(Candidato obj) {
 		obj.setId(null);
 		return repo.save(obj);
 	}
 
-	public Cargo update(Cargo obj) {
+	public Candidato update(Candidato obj) {
 		find(obj.getId());
 		return repo.save(obj);
 	}
@@ -48,26 +47,22 @@ public class CargoService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir um usúario que participou de alguma votação");
+			throw new DataIntegrityException("Não é possível excluir um Candidato que participou de alguma eleição");
 		}
 	}
 
-	public Page<Cargo> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+	public Page<Candidato> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
 
-	public List<Cargo> findAll() {
+	public List<Candidato> findAll() {
 		return repo.findAll();
 	}
 
-	public Cargo fromDTO(CargoDTO obj) {
-		return new Cargo(obj.getId(), obj.getNomeCargo(),null);
+	public Candidato fromDTO(CandidatoDTO obj) {
+		Optional<Cargo> cargo = cargoRepository.findById(obj.getCargoId());
+		return new Candidato(obj.getId(),obj.getNome(),obj.getFotoUrl(),cargo.get());
 	}
 	
-	
-	public Cargo fromDTO(CargoNewDTO obj) {
-		Optional<Eleicao> eleicao = eleicaoRepository.findById(obj.getEleicaoId());
-		return new Cargo(obj.getId(), obj.getNomeCargo(),eleicao.get());
-	}
 }

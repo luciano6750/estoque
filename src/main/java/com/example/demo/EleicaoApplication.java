@@ -1,7 +1,8 @@
 package com.example.demo;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -44,10 +45,8 @@ public class EleicaoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Calendar calendarioIni = Calendar.getInstance();
-		Calendar calendarioFim = Calendar.getInstance();
-		calendarioFim.add(Calendar.DATE, 30);
-		Eleicao eleicao1 = new Eleicao(null, "Eleições Janeiro 2022", calendarioIni.getTime(), calendarioFim.getTime());
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Eleicao eleicao1 = new Eleicao(null, "Eleições Janeiro 2022", df.parse("2022-06-21"), df.parse("2022-06-30"));
 
 		Cargo cargo1 = new Cargo(null, "Gerente de TI", eleicao1);
 		Cargo cargo2 = new Cargo(null, "Gerente de RH", eleicao1);
